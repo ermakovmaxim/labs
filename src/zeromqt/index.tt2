@@ -1,0 +1,47 @@
+[% INCLUDE header %]
+<h1>Zeromqt - a <a href="http://qt.nokia.com/" title="Qt">Qt</a> binding for <a href="http://zeromq.com/" title="ZeroMQ">ZeroMQ</a></h1>
+
+<p>Zeromqt integrates ZeroMQ (version 2.1.0 and later) into the Qt event loop,
+mapping ZeroMQ message events onto Qt signals.</p>
+
+<p>It also provides an API that is more "Qt-like" than the native ZeroMQ C or C++
+APIs, allowing messages to be handled as QByteArrays and providing classes
+that are similar in style to QAbstractSocket.</p>
+
+<h2>Status</h2>
+
+<p>Pre-alpha.</p>
+
+<p>There are no known bugs, but nor has there been any testing beyond
+the included sample app. It's being used as part of a large commercial
+application, though, so it'll be getting some testing and attention.</p>
+
+<h2>Usage</h2>
+
+<p>To use Zeromqt in a Qt project, add this to the projects .pro file</p>
+
+<pre><code>HEADERS += ZmqException.h ZmqMessage.h ZmqSocket.h ZmqContext.h
+SOURCES += ZmqSocket.cc ZmqMessage.cc
+LIBS += -lzmq
+</code></pre>
+
+<p>and copy the six Zmq* files into the project.</p>
+
+<h2>Exceptions</h2>
+
+<p>Zeromqt uses C++ exceptions by default. You'll need to catch ZmqException
+objects in the normal way (which on Qt probably involves inheriting from
+QCoreApplication and reimplementing notify()).</p>
+
+<p>There is untested support in the code for replacing exceptions with Qt-style
+errorString() error handling instead - look for USE_EXCEPTIONS</p>
+
+<h2>Sample</h2>
+
+<p>There's a single pub-sub sample included. Build it with qmake; make. Run the
+server with "./pubsubsample server foo" and the client with
+"./pubsubsample client foo".</p>
+
+<h2>Availability</h2>
+<p>There's initial code available at <a href="http://github.com/wttw/zeromqt">github</a>.
+[% INCLUDE footer %]

@@ -1,0 +1,124 @@
+(server-start)
+
+;; turn on font-lock mode
+(when (fboundp 'global-font-lock-mode)
+  (global-font-lock-mode t))
+
+(add-to-list 'load-path "~/.emacs.d/plugins")
+
+;; Parens
+(require 'mic-paren)
+(paren-activate)
+
+;; enable visual feedback on selections
+;(setq transient-mark-mode t)
+
+;; default to better frame titles
+(setq frame-title-format '(buffer-file-name "%f" "%b"))
+
+;(setq 
+;  time-stamp-active t
+;  time-stamp-line-limit 10
+;  time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S (%u)") 
+;(add-hook 'write-file-hooks 'time-stamp)
+
+;(require 'cmake-mode)
+;(setq auto-mode-alist
+;      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
+;                ("\\.cmake\\'" . cmake-mode))
+;              auto-mode-alist))
+
+
+;(require 'template)
+;(template-initialize)
+
+(load "~/abacus3/devtools/nxml-mode-20041004/rng-auto.el")
+  (setq auto-mode-alist
+        (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
+              auto-mode-alist))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(inhibit-startup-screen t)
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Inconsolata" :foundry "nil" :slant normal :weight normal :height 141 :width normal)))))
+
+(require 'php-mode)
+(require 'mmm-mode)
+
+(mmm-add-group 'html-php
+ '((html-php-output
+    :submode php-mode
+    :face mmm-output-submode-face
+    :front "<\\?php *echo "
+    :back "\\?>"
+    :include-front t
+    :front-offset 5
+    :insert ((?e php-echo nil @ "<?php" @ " echo " _ " " @ "?>" @))
+    )
+   (html-php-code
+    :submode php-mode
+    :face mmm-code-submode-face
+    :front "<\\?\\(php\\)?"
+    :back "\\?>"
+    :insert ((?p php-section nil @ "<?php" @ " " _ " " @ "?>" @)
+             (?b php-block nil @ "<?php" @ "\n" _ "\n" @ "?>" @))
+    )))
+
+(autoload 'js2-mode "js2" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+;; YAML
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
+;; Snippets
+(require 'yasnippet-bundle)
+
+;; Cucumber
+(add-to-list 'load-path "~/.emacs.d/elisp/feature-mode")
+(require 'feature-mode)
+(add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+
+(set-default-font "Inconsolata")
+
+;; Markdown
+(autoload 'markdown-mode "markdown-mode"
+  "Major mode for editing Markdown files" t)
+(setq auto-mode-alist
+      (cons '("\\.md" . markdown-mode) auto-mode-alist))
+
+(defun markdown-preview-file ()
+  "run Marked on the current file and revert the buffer"
+  (interactive)
+  (shell-command 
+   (format "open -a /Applications/Marked.app %s" 
+       (shell-quote-argument (buffer-file-name))))
+)
+(global-set-key "\C-cm" 'markdown-preview-file)
+
+;; Ido
+(require 'ido)
+(ido-mode t)
+
+(setq-default indent-tabs-mode nil)
+(setq mac-emulate-three-button-mouse t)
+
+;; Fill column
+(require 'fill-column-indicator)
+(setq fci-rule-width 1)
+(setq fci-rule-color "lightgrey")
+(add-hook 'markdown-mode-hook 'fci-mode)
+(setq-default fill-column 78)
+
+(fringe-mode '(1 . 0))

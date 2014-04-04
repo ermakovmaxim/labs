@@ -1,0 +1,81 @@
+[% INCLUDE header %]
+<h1>Google Blacklist Checker</h2>
+
+<p>This package maintains a local copy of the google malware blacklist and
+provides a tool to query it checking for matches. It implements the same
+protocol that's used in web browsers to check for sites that are providing
+malware.</p>
+
+<h2>Availability</h2>
+
+<p>Initial release: <a href="googlebl.tgz">googlebl.tgz</a></p>
+
+
+<h2>README</h2>
+<p>This package consists of two perl scripts.</p>
+
+<p>The first, blfetch, will fetch google blacklist data and store
+it locally in a SQLite database. By default it will fetch the
+two lists googpub-phish-shavar and goog-malware-shavar, but this
+can be modified by adding or removing entries from the gbl_lists
+table.</p>
+
+<p>blfetch will not retrieve a complete copy of the blacklist data
+on the first attempt, rather it will retrieve it in several batches
+over the course of several hours. It should usually be run as
+"blfetch --daemon", in which mode it will run continuously and
+keep the local copy of blacklist data up to date.</p>
+
+<p>blfetch will output the number of chunks it currently has local
+copies of after each fetch. Once this value has stabilised then
+the local copy of the blacklists is reasonably up to date.</p>
+
+<p>The second, blquery, will check a URL, or a list of URLs, against
+the local copy of the blacklists, and display one or more lines of
+output for each URL - either "OK &lt;url&gt;" if the URL was not found
+on any list or "HIT &lt;list&gt; &lt;chunk&gt; &lt;url&gt; &lt;match&gt;" for each list the
+URL is found in. In the response &lt;chunk&gt; is the section of the list
+that the URL was found in and &lt;match&gt; is the URL path that's actually
+blacklisted - which will often differ from the URL checked, as the
+blacklists list wildcarded URLs.</p>
+
+<p>The checking is not done entirely against the locally cached lists -
+rather, the local lists are used to identify likely blacklist hits,
+then blquery calls out to the Google API service to confirm the hit.</p>
+
+<p>Some example data is included, which can be used (once blfetch has
+built a local cache of the blacklists) via
+"./blcheck --file=testurls.txt"</p>
+
+<p>Each script has built-in documentation, accessed via --help or
+--man.</p>
+
+<p>The Google API to retrieve and query this data is only lightly
+documented and there's very little test data available, so the
+amount of testing done has been pretty minimal.</p>
+
+<h4>Prerequisites</h4>
+
+<p>The following non-standard perl modules need to be available:</p>
+
+<ul>
+<li>  Config::Simple
+<li>  Digest::SHA
+<li>  DBI
+<li>  DBD::SQLite
+<li>  LWP
+<li>  URI
+<li>  URI::Escape
+<li>  Proc::PID::File
+<li>  Sys::Syslog
+<li>  Proc::Daemon
+</ul>
+
+<p>On Ubuntu these can be installed with</p>
+
+<pre>  aptitude install libconfig-simple-perl libdigest-sha1-perl \
+           libdbi-perl libdbd-sqlite3-perl liburi-perl libwww-perl \
+           libsys-syslog-perl libproc-pid-file-perl libproc-daemon-perl</pre>
+
+
+[% INCLUDE footer %]

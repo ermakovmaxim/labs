@@ -1,0 +1,50 @@
+[% INCLUDE header %]
+<h1>KeyDancer</h1>
+
+<p>KeyDancer is full key management application for <a href="http://dkimcore.org/">DKIM Core</a> or <a href="http://dkim.org/">DKIM</a> email signing.</p>
+
+<p>KeyDancer is particularly suitable for deployment by ESPs who want to
+offer DKIM signing using their customers domains.</p>
+
+<p>KeyDancer provides:</p>
+<ul>
+<li>Support for thousands of domains</li>
+<li>Zero overhead customer deployment</li>
+<li>Web-based administration</li>
+<li>API to integrate with DKIM signer</li>
+<li>Customer deployment API</li>
+<li>Customer delegation using either of<ul>
+<li>NS delegation of a subdomain of the customers _domainkey domain</li>
+<li>CNAME based delegation for customer who cannot delegate a DNS subtree</li>
+</ul></li>
+<li>Real-time update of public keys to multiple remote nameservers</li>
+<li>Monitoring of customer DNS configuration</li>
+<li>Automatic key rotation</li>
+<li>Manual invalidation of compromised private keys</li>
+<li>Uses <a href="http://dkimcore.org/">DKIM Core</a> format keys, allowing users to mail from multiple locations without DKIM key conflict</li>
+</ul>
+
+<h2>Screenshots</h2>
+<script>Galleria.loadTheme('/galleria/src/themes/classic/galleria.classic.js');</script>
+
+<div class="images">
+<img src="kd1.png" />
+<img src="kd2.png" />
+<img src="kd3.png" />
+<img src="kd4.png" />
+</div>
+<script>$('.images').galleria({
+extend: function() {
+this.bind(Galleria.IMAGE, function(e) {
+                // bind a click event to the active image
+                $(e.imageTarget).css('cursor','pointer').click(this.proxy(function() {
+                    // open the image in a lightbox
+                    this.openLightbox();
+                }));
+            });
+}
+});</script>
+
+<h2>Availability</h2>
+<p>There's initial code available at <a href="http://github.com/wttw/keydancer">github</a>. Not production ready, yet, but getting close.</p>
+[% INCLUDE footer %]

@@ -1,0 +1,34 @@
+[% INCLUDE header %]
+<h2>rdns</h2>
+
+<p>rdns is a script to help with maintaining reverse DNS entries on
+a <a href="http://www.powerdns.com/">powerdns</a> based DNS setup. It's
+intended for use with a PostgreSQL database backend but could be
+modified to support MySQL fairly easily.</p>
+
+<p>It supports full NS delegation of zones larger than a /25, as well as
+sub-CIDR delegation using <a href="http://www.faqs.org/rfcs/rfc2317.html">RFC2317</a> or <a href="http://www.faqs.org/rfcs/rfc4183.html">RFC4183</a> notation or some forms
+of the DeGroot hack. Hurrican Electric have <a href="http://www.he.net/adm/reverse.dns.html">some examples</a> of these sorts of delegation.</p>
+
+<p>The only configuration needed is to ensure that it can connect to the
+database - by default it will connect to the database 'powerdns' as user
+'pdns' without a password.</p>
+
+<p>Before using it add the in-addr.arpa zones delegated to you to powerdns
+containing just NS and SOA records, for example 168.192.in-addr.arpa or
+128-25.179.105.184.in-addr.arpa.</p>
+
+<p>When run rdns.pl searches (by default all zones, but a list of zones
+can be passed on the command line) for A records that point to address
+space that has been delegated to this powerdns server, and for which there
+is no existing reverse DNS. It then adds a single PTR record for each
+IP address, picked at random from the A records pointing at that IP.</p>
+
+<p>It will not delete PTR records if the A record pointing at them
+changes or is deleted.</p>
+
+<p>IPv4 only for now. I'll need to add IPv6 support soon.</p>
+
+<p><a href="rdns.pl">Download rdns.pl</a><p>
+
+[% INCLUDE footer %]

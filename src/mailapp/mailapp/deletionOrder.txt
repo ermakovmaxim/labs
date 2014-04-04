@@ -1,0 +1,14 @@
+sqlite_sequence
+properties
+ews_folders
+associations
+recipients
+duplicates_unread_count
+threads
+feeds
+events
+attachments
+messages
+subjects
+addresses
+mailboxes

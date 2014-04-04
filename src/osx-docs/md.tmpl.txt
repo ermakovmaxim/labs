@@ -1,0 +1,172 @@
+Title: <TMPL_VAR ESCAPE="HTML" name="database">
+
+Abacus Schema [index]
+=====================
+
+<TMPL_VAR name="database_comment">
+Version: %VERSION% dumped on <TMPL_VAR name="dumped_on">
+
+<TMPL_LOOP name="schemas">
+### <TMPL_VAR name="schema"> [<TMPL_VAR ESCAPE="HTML" name="schema_sgmlid">]
+<TMPL_LOOP name="tables">* [<TMPL_VAR ESCAPE="HTML" name="table">](#<TMPL_VAR ESCAPE="URL" name="table_sgmlid">)
+</TMPL_LOOP name="tables">
+</TMPL_LOOP name="schemas">
+
+
+<TMPL_LOOP name="schemas">
+
+<TMPL_IF name="number_of_schemas">
+<hr>
+# Schema <TMPL_VAR ESCAPE="HTML" name="schema">
+<TMPL_IF name="schema_comment">
+*<TMPL_VAR name="schema_comment">*
+</TMPL_IF name="schema_comment">
+
+</TMPL_IF name="number_of_schemas">
+<TMPL_LOOP name="tables">
+<hr>
+## <TMPL_IF name="view_definition">View:<TMPL_ELSE>Table:</TMPL_IF> <TMPL_IF name="number_of_schemas"><a href="#<TMPL_VAR ESCAPE="URL" name="schema_sgmlid">"><TMPL_VAR ESCAPE="HTML" name="schema"></a>.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="table"> [<TMPL_VAR ESCAPE="URL" name="table_sgmlid">]
+<TMPL_IF name="table_comment">
+<p><TMPL_VAR ESCAPE="HTML" name="table_comment"></p>
+</TMPL_IF name="table_comment">
+
+
+<table width="100%" cellspacing="0" cellpadding="3">
+<caption><TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="table"> Structure</caption>
+<tr>
+<th>F-Key</th>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<TMPL_LOOP name="columns">
+<tr class="<TMPL_IF name="__odd__">tr0<TMPL_ELSE name="__odd__">tr1</TMPL_IF name="__odd__">">
+<td>
+<TMPL_LOOP name="column_constraints">
+<TMPL_IF name="column_fk">
+<a href="#<TMPL_VAR ESCAPE="URL" name="column_fk_sgmlid">"><TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="column_fk_schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="column_fk_table">.<TMPL_VAR ESCAPE="HTML" name="column_fk_colnum"><TMPL_IF name="column_fk_keygroup">#<TMPL_VAR name="column_fk_keygroup"></TMPL_IF name="column_fk_keygroup"></a>
+</TMPL_IF name="column_fk">
+</TMPL_LOOP name="column_constraints">
+</td>
+<td><TMPL_VAR ESCAPE="HTML" name="column"></td>
+<td><TMPL_VAR ESCAPE="HTML" name="column_type"></td>
+<td><i>
+<TMPL_LOOP name="column_constraints">
+<TMPL_IF name="column_primary_key">PRIMARY KEY
+</TMPL_IF name="column_primary_key">
+
+<TMPL_IF name="column_unique">
+UNIQUE<TMPL_IF name="column_unique_keygroup">#<TMPL_VAR name="column_unique_keygroup"></TMPL_IF name="column_unique_keygroup">
+</TMPL_IF name="column_unique">
+</TMPL_LOOP name="column_constraints">
+
+<TMPL_IF name="column_constraint_notnull">NOT NULL</TMPL_IF name="column_constraint_notnull">
+<TMPL_IF name="column_default">DEFAULT <TMPL_VAR ESCAPE="HTML" name="column_default"></TMPL_IF name="column_default">
+</i>
+<TMPL_IF name="column_comment"><br><br><TMPL_VAR ESCAPE="HTML" name="column_comment"></TMPL_IF name="column_comment">
+</td>
+</tr>
+</TMPL_LOOP name="columns">
+</table>
+
+<TMPL_IF name="inherits">
+<p>Table <TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="table"> Inherits
+<TMPL_LOOP name="inherits">
+<TMPL_VAR name="index_name"> <TMPL_VAR name="index_definition">
+<a href="#<TMPL_VAR ESCAPE="URL" name="parent_sgmlid">"><TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="parent_schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="parent_table"></a>, 
+</TMPL_LOOP name="inherits">
+</p>
+</TMPL_IF name="inherits">
+
+<TMPL_UNLESS name="view_definition">
+<TMPL_IF name="stats_enabled">
+<p>&nbsp;</p>
+<table width="100%" cellspacing="0" cellpadding="3">
+<caption>Statistics</caption>
+<tr>
+<th>Total Space (disk usage)</th>
+<th>Tuple Count</th>
+<th>Active Space</th>
+<th>Dead Space</th>
+<th>Free Space</th>
+</tr>
+<tr class="tr0">
+<td><TMPL_VAR ESCAPE="HTML" name="stats_table_bytes"></td>
+<td><TMPL_VAR ESCAPE="HTML" name="stats_tuple_count"></td>
+<td><TMPL_VAR ESCAPE="HTML" name="stats_tuple_bytes"></td>
+<td><TMPL_VAR ESCAPE="HTML" name="stats_dead_bytes"></td>
+<td><TMPL_VAR ESCAPE="HTML" name="stats_free_bytes"></td>
+</tr>
+</table>
+</TMPL_IF name="stats_enabled">
+</TMPL_UNLESS name="view_definition">
+
+<TMPL_IF name="constraints">
+<p>&nbsp;</p>
+<table width="100%" cellspacing="0" cellpadding="3">
+<caption><TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="table"> Constraints</caption>
+<tr>
+<th>Name</th>
+<th>Constraint</th>
+</tr>
+<TMPL_LOOP name="constraints">
+<tr class="<TMPL_IF name="__odd__">tr0<TMPL_ELSE name="__odd__">tr1</TMPL_IF name="__odd__">">
+<td><TMPL_VAR ESCAPE="HTML" name="constraint_name"></td>
+<td><TMPL_VAR ESCAPE="HTML" name="constraint"></td>
+</tr>
+</TMPL_LOOP name="constraints">
+</table>
+</TMPL_IF name="constraints">
+
+<TMPL_IF name="fk_schemas">
+<p>Tables referencing this one via Foreign Key Constraints:</p>
+<TMPL_LOOP name="fk_schemas">
+<ul>
+<li><a href="#<TMPL_VAR ESCAPE="URL" name="fk_sgmlid">"><TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="fk_schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="fk_table"></a></li>
+</ul>
+</TMPL_LOOP name="fk_schemas">
+</TMPL_IF name="fk_schemas">
+
+<TMPL_IF name="indexes">
+| Indexes                 ||
+| ---------- | ----------- |
+<TMPL_LOOP name="indexes">| **<TMPL_VAR name="index_name">** | *<TMPL_VAR name="index_definition">* |
+</TMPL_LOOP name="indexes">
+</TMPL_IF name="indexes">
+
+<TMPL_IF name="view_definition">
+<pre><TMPL_VAR ESCAPE="HTML" name="view_definition"></pre>
+</TMPL_IF name="view_definition">
+
+<TMPL_IF name="permissions">
+<p>&nbsp;</p>
+<table width="100%" cellspacing="0" cellpadding="3">
+<caption>Permissions which apply to <TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="schema">.</TMPL_IF name="number_of_schemas"><TMPL_VAR ESCAPE="HTML" name="table"></caption>
+<tr>
+<th>User</th>
+<th><center>Select</center></th>
+<th><center>Insert</center></th>
+<th><center>Update</center></th>
+<th><center>Delete</center></th>
+<th><center>Reference</center></th>
+<th><center>Rule</center></th>
+<th><center>Trigger</center></th>
+</tr>
+<TMPL_LOOP name="permissions">
+<tr class="<TMPL_IF name="__odd__">tr0<TMPL_ELSE name="__odd__">tr1</TMPL_IF name="__odd__">">
+<td><TMPL_VAR ESCAPE="HTML" name="user"></td>
+<td><TMPL_IF name="select"><center>&diams;</center></TMPL_IF name="select"></td>
+<td><TMPL_IF name="insert"><center>&diams;</center></TMPL_IF name="insert"></td>
+<td><TMPL_IF name="update"><center>&diams;</center></TMPL_IF name="update"></td>
+<td><TMPL_IF name="delete"><center>&diams;</center></TMPL_IF name="delete"></td>
+<td><TMPL_IF name="references"><center>&diams;</center></TMPL_IF name="references"></td>
+<td><TMPL_IF name="rule"><center>&diams;</center></TMPL_IF name="rule"></td>
+<td><TMPL_IF name="trigger"><center>&diams;</center></TMPL_IF name="trigger"></td>
+</tr>
+</TMPL_LOOP name="permissions">
+</table>
+</TMPL_IF name="permissions">
+[Top](#index)
+</TMPL_LOOP name="tables">
+* * *
+</TMPL_LOOP name="schemas">

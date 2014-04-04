@@ -1,0 +1,33 @@
+// dot 2.26.3 on Mac OS X 10.7.2
+// SchemaSpy rev 590
+digraph "threads" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "threads" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">threads</TD></TR>
+      <TR><TD PORT="ROWID" COLSPAN="3" ALIGN="LEFT">ROWID</TD></TR>
+      <TR><TD PORT="message_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">message_id</TD></TR>
+      <TR><TD PORT="reference" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">reference</TD></TR>
+      <TR><TD PORT="is_originator" COLSPAN="3" ALIGN="LEFT">is_originator</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">486,802 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/threads.html"
+    tooltip="threads"
+  ];
+}

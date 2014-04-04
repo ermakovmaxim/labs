@@ -1,0 +1,37 @@
+[% INCLUDE header %]
+<h2>Projects</h2>
+<dl>
+<dt><a href="keydancer/">KeyDancer</a></dt>
+<dd>A key management application for DKIM and DKIM Core email signing</dd>
+<dt><a href="zeromqt/">Zeromqt</a></dt>
+<dd>A Qt binding for ZeroMQ</dd>
+<dt><a href="googlebl/">Googlebl</a></dt>
+<dd>Querying Googles malware blacklist from the commandline.</dd>
+</dl>
+
+<h2>Tools</h2>
+<dl>
+<dt><a href="powertiny/">powertiny</a>
+<dd>A script to push DNS zones from a master powerdns server to tinydns slaves
+<dt><a href="reversedns/">reversedns</a>
+<dd>A script to maintain reverse dns entries on a powerdns server
+<dt><a href="postgresql-qa/">resetdb</a>
+<dd>Setup a postgresql server on OS X for application QA, and easily reset it to a known state.
+</dl>
+<h2>Articles</h2>
+<dl>
+<dt><a href="pocohelp">Poco documentation in Qt Assistant</a></dt>
+<dd>Converting Poco documentation for use with Qt Assistant, giving
+keyword and full text search, tabbed browsing and other nice things.</dd>
+<dt><a href="postgresql-osx/">Postgresql on OS X</a></dt>
+<dd>Installing postgresql from source on OS X, including working readline and fat libraries</dd>
+<dt><a href="mailapp/">The sqlite schema used by Mail.app</a></dt>
+<dd>Mail.app is the main mail client on OS X. While it stores messages in
+a fairly simple one-message-per-file hashed directory tree most of the
+metadata about those messages - including which mailbox they are in - is
+stored solely in a sqlite database.</dd>
+<dt><a href="osx-docs/">Writing documentation on OS X</a></dt>
+<dd>Some tools for markdown based documentation, and some useful unicode
+magic for command key and option key symbols</dd>
+</dl>
+[% INCLUDE footer %]

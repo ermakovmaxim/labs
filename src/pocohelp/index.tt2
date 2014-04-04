@@ -1,0 +1,28 @@
+[% INCLUDE header title = 'Poco documentation for Qt Assistant' %]
+<h1>Poco documentation for Qt Assistant</h1>
+<p>Poco is a C++ framework suited to network server and web application
+development. It has fairly good <a href="http://pocoproject.org/docs/">documentation</a>
+but it's presented as old-style HTML frames, so it's missing a lot of
+features I like with Qt.</p>
+
+<p>So I converted the Poco docs into a Qt Assistant format help file, with
+index, table of contents, full text search, tabbed browsing and working
+history.</p>
+
+<p style="align: center"><a href="poco.png"><img src="pocosmall.png"></a></p>
+
+<p>To use it, download <a href="pocoqthelp.zip">pocoqthelp.zip</a>, and
+unzip it to give poco.qhc and poco.qch.</p>
+
+<p>If you don't have Qt Assistant installed already, install it from
+<a href="http://qt-project.org/downloads">qt-project.org</a> or (on Linux)
+as a standard system package.</p>
+
+<p>Then launch Qt Assistant as "<tt>assistant -collectionFile poco.qhc</tt>".
+On OS X you'll need to run "<tt>/path/to/Assistant.app/Contents/MacOS/Assistant -collectionFile poco.qhc</tt>".</p>
+
+<p>The zip file also includes <tt>makeqthelp.pl</tt> and <tt>poco.qhcp</tt>,
+which can be used to rebuild the Assistant help files from the Poco
+HTML documentation.</p>
+
+[% INCLUDE footer %]

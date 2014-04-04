@@ -1,0 +1,22 @@
+[% INCLUDE header %]
+<h2>Mail.app Database Schema</h2>
+
+<p>Mail.app is the main mail client on OS X. While it stores messages in
+a fairly simple one-message-per-file hashed directory tree most of the
+metadata about those messages - including which mailbox they are in - is
+stored solely in a sqlite database.</p>
+
+<p>You can read (and modify) the database from the commandline (<tt>sqlite3 
+'~/Library/Mail/V2/MailData/Envelope Index'</tt>) or using any of the sqlite 
+GUI tools - though you'd be smart to take a copy of it and just work with 
+the copy.</p>
+
+<p>The database has fairly useful table and column names, but is undocumented
+and doesn't include much schema metadata (no foreign keys, for example). I've
+used <a href="http://schemaspy.sourceforge.net/">SchemaSpy</a> and 
+<a href="mailapp.meta.xml">this metadata file</a> to create a rough set
+of documentation for the schema. There are some things I know are missing (associations? ews_folders?) but it's better than nothing.</p>
+
+<p><a href="mailapp/">Schema for Mail.app sqlite database</a></p>
+
+[% INCLUDE footer %]

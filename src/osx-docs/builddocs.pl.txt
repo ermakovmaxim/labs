@@ -1,0 +1,238 @@
+#!/usr/bin/perl
+use strict;
+use File::Basename;
+use File::Copy;
+
+use lib 'lib';
+use Text::Markdown;
+use Text::MultiMarkdown 'markdown';
+
+my $sf;
+if($#ARGV == 0) {
+    $sf = $ARGV[0];
+} else {
+    if($#ARGV == -1 && -e './source/structure.txt') {
+        $sf = './source/structure.txt';
+    } else {
+        die "usage: $0 structure.txt\n" unless $#ARGV==0;
+    }
+}
+
+open SF, $sf or die "Failed to open $sf: $!\n";
+
+my $dir = dirname($sf);
+my $out = "doc";
+
+-d $out || mkdir $out || die "Failed to create output directory $out: $!\n";
+
+my @files;
+my %depth;
+my %content;
+my %attr;
+my %images;
+my %header;
+my %internal;
+my %external;
+
+if((stat("$dir/../../server/etc/schema.sql.in"))[9] > (stat("$dir/database-schema.md"))[9]+60) {
+    die "database-schema.md is older than schema.sql.in\n";
+}
+
+# read structure
+while(<SF>) {
+    chomp;
+    next if /^\s*$/;
+    next if /^\s*#/;
+    die "Invalid line in $sf: '$_'\n" unless /^(\s*)([a-z0-9-]+)$/;
+    my ($indent, $filename) = ($1, $2);
+    push @files, $filename;
+    die "File $filename seen twice\n" if exists $depth{$filename};
+    $depth{$filename} = length($indent) / 2;
+}
+close SF;
+
+# read all source markdown files
+foreach my $f (@files) {
+    my $text;
+    my $file = "$dir/$f.md";
+    open IF, $file or die "Failed to open $file: $!\n";
+    my %attribute;
+    my $currattr;
+    my @htwo;
+    while(<IF>) {
+        $text .= $_ unless /^Synthezize:/i;
+        chomp;
+        last if /^\s*$/;
+        if(/^([a-z0-9.-]+):\s*(.*)/i) {
+            $currattr = lc($1);
+            $attribute{$currattr} = $2;
+        } elsif(/^\s+/) {
+            $attribute{$currattr} .= $_;
+        } else {
+            die "Unexpected line '$_' while reading $file\n";
+        }
+    }
+
+    while(<IF>) {
+        $text .= $_;
+        chomp;
+        if(/^##\s+(.*\S)\s*$/) {
+            push @htwo, $1;
+        }
+    }
+    die "$f has no title\n" unless exists $attribute{title};
+
+    $attr{$f} = \%attribute;
+    $content{$f} = $text;
+    $header{$f} = \@htwo;
+}
+
+# Synthesize any files needed
+foreach my $f (@files) {
+    if(exists $attr{$f}{synthesize}) {
+        if($attr{$f}{synthesize} =~ /childtoc/) {
+            $content{$f} .= synthtoc($f);
+        }
+    }
+}
+
+
+# Copy all markdown files, and their HTML versions, to output
+foreach my $f (@files) {
+    open OF, '>', "$out/$f.md" or die "Failed to create $out/$f.md: $!\n";
+    print OF $content{$f};
+    close OF;
+
+    my $m = Text::MultiMarkdown->new(use_metadata => 1, document_format => 'complete', css => 'style.css');
+    my $html = $m->markdown($content{$f});
+
+    my @ims = $html =~ m/<img [^>]*src="([^"]+)"/sg;
+    foreach my $i (@ims) {
+        $images{$i}++;
+    }
+
+    my @links = $html =~ m/<a [^>]*href="([^"]+)"/sg;
+    foreach my $i (@links) {
+        $i =~ s/#.*//;
+        if($i =~ /^https?:\//) {
+            $external{$i}++;
+        } else {
+            $internal{$i}++;
+        }
+    }
+
+    open OF, '>', "$out/$f" or die "Failed to create $out/$f: $!\n";
+    print OF $html;
+    close OF;
+}
+
+# Check links
+foreach my $i (keys %external) {
+    print "External link: $i\n";
+}
+
+foreach my $i (keys %internal) {
+    unless(exists $attr{$i}) {
+        warn "Missing file: $i\n";
+    }
+}
+
+# Check for unused markdown source
+foreach my $f (glob("$dir/*.md")) {
+    die "Unexpected file: $f\n" unless $f =~ /.*\/([a-z0-9-]+).md$/;
+    my $fname = $1;
+    unless(exists $attr{$fname}) {
+        warn "Unused file: $fname\n";
+    }
+}
+
+# Copy images to output
+foreach my $f (keys %images) {
+    my $imd = dirname($f);
+    -d "$out/$imd" || mkdir "$out/$imd";
+    copy "$dir/$f", "$out/$f";
+    my $sk = $f;
+    $sk =~ s/\.png$/.skitch/;
+    if(-e $sk && (stat($sk))[9] > (stat($f))[9]+60) {
+        die "$sk is newer than $f\n";
+    }
+}
+
+# Copy styles to output
+copy "$dir/style.css", "$out/style.css";
+
+# Create qthelp source file
+open OF, '>', "$out/abacus.qhp" or die "Failed to create $out/abacus.qhcp: $!\n";
+print OF "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+print OF "<QtHelpProject version=\"1.0\">\n";
+print OF "    <namespace>com.wordtothewise.abacus.4</namespace>\n";
+print OF "    <virtualFolder>doc</virtualFolder>\n";
+print OF "    <filterSection>\n";
+print OF "        <filterAttribute>Abacus</filterAttribute>\n";
+print OF "        <toc>\n";
+my $ind = 0;
+foreach my $f (@files) {
+    while($ind > $depth{$f}) {
+        print OF "    ", "    " x $ind, "</section>\n";
+        $ind--;
+    }
+    print OF "        ", "    " x $depth{$f}, "<section title=\"", $attr{$f}{title}, "\" ref=\"$f\">\n";
+    $ind = $depth{$f}+1;
+    foreach my $h (@{$header{$f}}) {
+        my $id = lc($h);
+        $id =~ s/[^a-z]+//g;
+        print OF "        ", "    " x $ind, "<section title=\"$h\" ref=\"$f#$id\" />\n";
+    }
+}
+while($ind > 0) {
+    print OF "    ", "    " x $ind, "</section>\n";
+    $ind--;
+}
+
+print OF "        </toc>\n";
+print OF "        <files>\n";
+foreach my $f (@files) {
+    print OF "            <file>$f</file>\n";
+}
+foreach my $f (keys %images) {
+    print OF "            <file>$f</file>\n";
+}
+print OF "            <file>style.css</file>\n";
+print OF "        </files>\n";
+print OF "        <keywords>\n";
+print OF "        </keywords>\n";
+print OF "    </filterSection>\n";
+print OF "</QtHelpProject>\n";
+close OF;
+
+# Create a set of links based on the contents of "child" documents
+sub synthtoc($ )
+{
+    my $start = shift;
+    my $offset = $depth{$start};
+    my $skip=1;
+
+    my $title = $attr{$start}{title};
+    my $ret = "\n\n" . $title . "\n" . '=' x length($title) . "\n\n";
+
+    foreach my $f (@files) {
+        if($f eq $start) {
+            $skip = 0;
+            next;
+        }
+        next if $skip;
+        my $off = $depth{$f} - $offset - 1;
+        last if $off < 0;
+        my $indent = '    ' x $off;
+        my $title = $attr{$f}{title};
+        $ret .= "$indent* [$title]($f)\n";
+        if(exists $header{$f}) {
+            foreach my $h (@{$header{$f}}) {
+                my $id = lc($h);
+                $id =~ s/[^a-z]+//g;
+                $ret .= "$indent    *[$h]($f#$id)\n";
+            }
+        }
+    }
+    return $ret;
+}

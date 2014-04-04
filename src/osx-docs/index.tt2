@@ -1,0 +1,66 @@
+[% INCLUDE header title = 'Writing documentation on OS X' %]
+<h1>Writing documentation on OS X</h1>
+
+<p>Just some notes I've made while creating documentation for
+<a href="http://wordtothewise.com/products/abacus.html">Abacus</a>.
+I'm developing the documentation primarily on OS X using MultiMarkdown,
+targeting Qt Assistant style HTML as well as web-hosted HTML.</p>
+
+<h2>Tools</h2>
+
+<ul>
+<li><a href="http://emacsformacosx.com/">Emacs</a>. The native Cocoa build
+looks much better on HiDPI displays than the X11 build I was using before.
+Combined with this <a href="e.txt">tiny shell script</a> to edit files from
+the commandline it's at least as usable as TextMate or Chocolat for non-code
+editing.
+<li><a href="http://levien.com/type/myfonts/inconsolata.html">Inconsolata</a> -
+it's a nice monospace font that doesn't make my eyes bleed.
+<li><a href="http://jblevins.org/projects/markdown-mode/">Markdown mode</a>
+for Emacs. I'm actually using MultiMarkdown, which is a superset of Markdown,
+but markdown-mode is working better for me than the only multimarkdown-mode
+I could find.
+<li>More emacs plugins and configuration - mic-paren, yasnippet,
+fill-column-indicator all set up in my <a href="dot-emacs.txt">.emacs</a>
+<li><a href="http://markedapp.com/">Marked</a> - a little OS X app that
+monitors a markdown format file and previews it each time you save it. Nothing
+you can't do with a few scripts, but Marked does it very well and very
+simply. Well worth the four bucks.
+<li><a href="http://skitch.com/">Skitch</a> for taking and annotating
+screenshots. It has some annoyances, not least the lack of scriptability.
+I have my main images folder symlinked to my desktop, so I can drag images
+from skitch directly to it. I'm saving .skitch format as well as .png so I
+can go back and reannotate existing shots or move annotations onto updated
+shots.
+<li><a href="http://www.rbt.ca/autodoc/">Autodoc</a> combined with a 
+<a href="md.tmpl.txt">slightly
+hacked up template</a> to generate markdown format documentation of the PostgreSQL
+schema.
+<li><a href="http://search.cpan.org/perldoc?Pod::Markdown">Pod::Markdown</a> to
+import some perl documentation.
+<li><a href="builddocs.pl.txt">And some perl to glue it all together</a>.
+</ul>
+
+<h2>Characters</h2>
+
+<p>There are lots of characters that it's useful to have in documentation
+that can't easily be typed. If you go to System Preferences &rarr;
+Language &amp; Text &rarr; Input Sources then you can enable <i>Unicode Hex
+Input</i> - which lets you type in unicode by holding down the option key
+and typing the hex code.
+
+<ul>
+<li>&#x2318; 2318 - the Command Key symbol
+<li>&#x2325; 2325 - the Option Key symbol
+<li>&#x21E7; 21E7 - the Shift Key symbol
+<li>&#x21E5; 21E5 - the Tab Key symbol
+<li>&#x23CE; 23CE - the Return Key symbol
+<li>&#x232B; 232B - the Delete Key symbol
+<li>&#x2192; 2192 - right arrow, useful for menus
+</ul>
+
+(If you can find the character you want in the Character Viewer, you can
+right click on it to copy information about it, including the unicode code
+point, to the clipboard).
+
+[% INCLUDE footer %]

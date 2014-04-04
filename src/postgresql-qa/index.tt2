@@ -1,0 +1,53 @@
+[% INCLUDE header title = 'Fast QA database population' %]
+
+<h1>Fast Postgresql QA database population</h1>
+
+<p>We do a lot of testing - manual and automated, unit and functional -
+and most of our apps tend to use Postgresql. That means we want to
+reset the database back to a known state before every test.</p>
+
+<p>The obvious approach is to run a SQL script that drops and recreates
+all objects in the database. That works OK, but it's a little slow and
+it makes managing all the production objects, plus any mock or test
+data needed for tests annoying.</p>
+
+<p>Hence this script (for OS X right now, but I'll probably modify it to run
+on Linux too).<p>
+
+<p>It's nothing fancy. You edit the first few lines of the script to
+tell it which postgresql installation to use, and the name of the QA
+database you want to create.</p>
+
+<p>The first time it's run, it'll create a ramdisk and start a postgresql
+cluster running there. It creates a template database, then goes through
+the current directory looking for SQL scripts to run to populate it.
+Anything that matches <i>databasename</i>_template*.sql will be run.</p>
+
+<p>For example, I'm creating a test database called <i>abacusqa</i> and
+my SQL scripts are:</p>
+
+<pre>abacusqa_template001.sql
+abacusqa_template010_users.sql
+abacusqa_template020_license.sql
+abacusqa_template030_tickets.sql</pre>
+
+<p>Once that template database is created, it creates the actual QA database,
+based on that template.</p>
+
+<p>Each time it's run after that, it'll terminate any connections to the
+QA database, drop it and recreate it from the template - all in well under
+a second.</p>
+
+<p>You can run the script with "-w" to drop and recreate the database cluster
+and with "-u" to clean up after itself and remove the ramdisk.</p>
+
+<p>It doesn't make any attempt to lock out new attempts to connect to the test
+database in the short time span between current connections being terminated
+and the database being dropped, so if the application under test reconnects
+to the database automatically with no delay it can win that race, and prevent
+the database from being dropped and recreated. It should probably set datallowcon
+to false in pg_database to avoid that, but right now it doesn't.</p>
+
+<p><a href="resetdb.tgz">Download</a></p>
+
+[% INCLUDE footer %]

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemaMeta xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://schemaspy.sourceforge.net/xmlschema/2011/02/05/schemaspy.meta.xsd">
+<comments>Approximate schema for the sqlite database used by current (V5) versions of Mail.app</comments>
+<tables>
+  <table name="attachments">
+    <column name="message_id">
+      <foreignKey table="messages" column="ROWID" />
+    </column>
+  </table>
+
+  <table name="duplicates_unread_count">
+    <column name="message_id">
+      <foreignKey table="messages" column="ROWID" />
+    </column>
+    <column name="mailbox_id">
+      <foreignKey table="mailboxes" column="ROWID" />
+    </column>
+  </table>
+
+  <table name="events">
+    <column name="message_id">
+      <foreignKey table="messages" column="ROWID" />
+    </column>
+  </table>
+
+  <table name="feeds">
+    <column name="mailbox_id">
+      <foreignKey table="mailboxes" column="ROWID" />
+    </column>
+  </table>
+
+  <table name="messages">
+    <column name="subject">
+      <foreignKey table="subjects" column="ROWID" />
+    </column>
+    <column name="mailbox">
+      <foreignKey table="mailboxes" column="ROWID" />
+    </column>
+    <column name="original_mailbox">
+      <foreignKey table="mailboxes" column="ROWID" />
+    </column>
+  </table>
+
+  <table name="recipients">
+    <column name="message_id">
+      <foreignKey table="messages" column="ROWID" />
+    </column>
+    <column name="address_id">
+      <foreignKey table="addresses" column="ROWID" />
+    </column>
+  </table>
+
+  <table name="threads">
+    <column name="message_id">
+      <foreignKey table="messages" column="ROWID" />
+    </column>
+  </table>
+
+</tables>
+
+</schemaMeta>

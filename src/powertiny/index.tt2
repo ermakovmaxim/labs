@@ -1,0 +1,32 @@
+[% INCLUDE header %]
+<h2>powertiny</h2>
+
+<p>Powertiny is a simple script to push all the dns zones published by
+a <a href="http://www.powerdns.com/">powerdns</a> server to one or more
+<a href="http://cr.yp.to/djbdns.html">tinydns</a> slave servers.</p>
+
+<p>It works by connecting to the local powerdns database to retrieve
+a list of published zones. For each zone it uses <a href="http://cr.yp.to/djbdns/axfrdns.html">axfrdns</a> to retrieve a copy of the zone in tinydns
+format. It then compiles them into a single cdb database file suitable for
+tinydns and uses scp to copy that to each slave server.</p>
+<p>As a performance
+enhancement it uses an MD5 hash of the combination of zones and checks whether
+each slave is already up to date before pushing out a new copy. This makes
+it suitable to run regularly from cron, even for large, mostly static dns.</p>
+
+<p>Out of the box it will work with Postgresql-backed PowerDNS, but with
+minor modifications it could be used with any master dns server that
+supports AXFR.</p>
+
+<p>It's configured by editing the script. The main prerequisites are 
+<ol>
+<li>having tcpclient, axfr-get and tinydns-data installed
+<li>configuring the master dns server to allow zone transfers
+<li>passwordless scp to each tinydns slave, to an account that can write to
+/etc/tinydns/root/data.cdb
+</ol>
+</p>
+
+<p><a href="powertiny.pl">Download powertiny.pl</a></p>
+
+[% INCLUDE footer %]
